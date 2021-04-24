@@ -1,12 +1,13 @@
 
-FROM ubuntu:focal
+FROM ubuntu:18.04
 
 ENV DEBIAN_FRONTEND=noninteractive 
 
-RUN apt update \
-    && apt install -y python3 \
+RUN apt-get update \
+    && apt-get install -y python3 \
     python3-pip \
-    vim
+    vim \
+    curl
 
 RUN pip3 install \
     docker \
