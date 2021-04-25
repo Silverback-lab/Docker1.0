@@ -1,0 +1,75 @@
+---
+version: "3"
+networks: 
+  media:
+services:
+  plex:
+    image: linuxserver/plex:version-1.20.3.3483-211702a9f
+    container_name: plex
+    network_mode: host
+    environment:
+      - PLEX_CLAIM=<<getclaim>>
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - /docker/plex/config:/config
+      - /mnt/usb/TV:/tv
+      - /mnt/usb/Movies:/movies
+    restart: unless-stopped  
+  sonarr:
+    image: linuxserver/sonarr:5.14
+    environment:
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - /docker/sonarr/config:/config
+      - /mnt/usb/TV:/tv
+      - /mnt/usb/Downloads:/downloads
+    ports:
+      - 8989:8989
+    restart: unless-stopped
+    networks:
+      - media
+  radarr:
+    image: linuxserver/radarr:version-v0.2.0.1504
+    environment:
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - /docker/radarr/config:/config
+      - /mnt/usb/Movies:/movies
+      - /mnt/usb/Downloads:/downloads
+    ports:
+      - 7878:7878
+    restart: unless-stopped
+    networks:
+      - media
+  nzbhydra2:
+    image: linuxserver/nzbhydra2:version-v3.10.1
+    container_name: nzbhydra2
+    environment:
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - /docker/nzbhydra/config:/config
+      - /mnt/usb/Downloads:/downloads
+    ports:
+      - 5076:5076
+    restart: unless-stopped
+    networks:
+      - media
+  nzbget:
+    image: linuxserver/nzbget:version-v21.0
+    container_name: nzbget
+    environment:
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - /docker/nzbget/config:/config
+      - /mnt/usb/Downloads:/downloads
+    ports:
+      - 6789:6789
+    restart: unless-stopped
+    networks:
+      - media
+
